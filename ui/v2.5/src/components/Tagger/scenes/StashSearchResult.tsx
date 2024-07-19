@@ -706,8 +706,17 @@ const StashSearchResult: React.FC<IStashSearchResultProps> = ({
     </div>
   );
 
-  async function onCreateTag(t: GQL.ScrapedTag) {
-    const toCreate: GQL.TagCreateInput = { name: t.name };
+  async function onCreateTag(t: GQL.ScrapedTag, endpoint: string) {
+    const stashIds =
+      t.remote_site_id && endpoint
+        ? [{ stash_id: t.remote_site_id, endpoint: endpoint }]
+        : [];
+
+    const toCreate: GQL.TagCreateInput = {
+      name: t.name,
+      stash_ids: stashIds,
+    };
+
     const newTagID = await createNewTag(t, toCreate);
     if (newTagID !== undefined) {
       setTagIDs([...tagIDs, newTagID]);
@@ -743,7 +752,10 @@ const StashSearchResult: React.FC<IStashSearchResultProps> = ({
             variant="secondary"
             key={t.name}
             onClick={() => {
-              onCreateTag(t);
+              onCreateTag(
+                t,
+                currentSource?.sourceInput.stash_box_endpoint ?? ""
+              );
             }}
           >
             {t.name}
