@@ -565,6 +565,29 @@ func (_m *TagReaderWriter) GetParentIDs(ctx context.Context, relatedID int) ([]i
 	return r0, r1
 }
 
+// GetStashIDs provides a mock function with given fields: ctx, relatedID
+func (_m *TagReaderWriter) GetStashIDs(ctx context.Context, relatedID int) ([]models.StashID, error) {
+	ret := _m.Called(ctx, relatedID)
+
+	var r0 []models.StashID
+	if rf, ok := ret.Get(0).(func(context.Context, int) []models.StashID); ok {
+		r0 = rf(ctx, relatedID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.StashID)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, relatedID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // HasImage provides a mock function with given fields: ctx, tagID
 func (_m *TagReaderWriter) HasImage(ctx context.Context, tagID int) (bool, error) {
 	ret := _m.Called(ctx, tagID)

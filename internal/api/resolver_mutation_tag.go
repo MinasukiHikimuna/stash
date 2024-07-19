@@ -24,7 +24,7 @@ func (r *mutationResolver) getTag(ctx context.Context, id int) (ret *models.Tag,
 	return ret, nil
 }
 
-func (r *mutationResolver) TagCreate(ctx context.Context, input TagCreateInput) (*models.Tag, error) {
+func (r *mutationResolver) TagCreate(ctx context.Context, input models.TagCreateInput) (*models.Tag, error) {
 	translator := changesetTranslator{
 		inputMap: getUpdateInputMap(ctx),
 	}
@@ -37,6 +37,7 @@ func (r *mutationResolver) TagCreate(ctx context.Context, input TagCreateInput) 
 	newTag.Favorite = translator.bool(input.Favorite)
 	newTag.Description = translator.string(input.Description)
 	newTag.IgnoreAutoTag = translator.bool(input.IgnoreAutoTag)
+	newTag.StashIDs = models.NewRelatedStashIDs(input.StashIds)
 
 	var err error
 
@@ -88,7 +89,7 @@ func (r *mutationResolver) TagCreate(ctx context.Context, input TagCreateInput) 
 	return r.getTag(ctx, newTag.ID)
 }
 
-func (r *mutationResolver) TagUpdate(ctx context.Context, input TagUpdateInput) (*models.Tag, error) {
+func (r *mutationResolver) TagUpdate(ctx context.Context, input models.TagUpdateInput) (*models.Tag, error) {
 	tagID, err := strconv.Atoi(input.ID)
 	if err != nil {
 		return nil, fmt.Errorf("converting id: %w", err)
@@ -107,6 +108,7 @@ func (r *mutationResolver) TagUpdate(ctx context.Context, input TagUpdateInput) 
 	updatedTag.Description = translator.optionalString(input.Description, "description")
 
 	updatedTag.Aliases = translator.updateStrings(input.Aliases, "aliases")
+	updatedTag.StashIDs = translator.updateStashIDs(input.StashIds, "stash_ids")
 
 	updatedTag.ParentIDs, err = translator.updateIds(input.ParentIds, "parent_ids")
 	if err != nil {

@@ -97,7 +97,8 @@ func (r *tagRowRecord) fromPartial(o models.TagPartial) {
 type tagRepositoryType struct {
 	repository
 
-	aliases stringRepository
+	stashIDs stashIDRepository
+	aliases  stringRepository
 
 	scenes    joinRepository
 	images    joinRepository
@@ -109,6 +110,12 @@ var (
 		repository: repository{
 			tableName: tagTable,
 			idColumn:  idColumn,
+		},
+		stashIDs: stashIDRepository{
+			repository{
+				tableName: "tag_stash_ids",
+				idColumn:  tagIDColumn,
+			},
 		},
 		aliases: stringRepository{
 			repository: repository{
@@ -749,6 +756,10 @@ func (qb *TagStore) UpdateImage(ctx context.Context, tagID int, image []byte) er
 
 func (qb *TagStore) destroyImage(ctx context.Context, tagID int) error {
 	return qb.blobJoinQueryBuilder.DestroyImage(ctx, tagID, tagImageBlobColumn)
+}
+
+func (qb *TagStore) GetStashIDs(ctx context.Context, tagId int) ([]models.StashID, error) {
+	return tagRepository.stashIDs.get(ctx, tagId)
 }
 
 func (qb *TagStore) GetAliases(ctx context.Context, tagID int) ([]string, error) {

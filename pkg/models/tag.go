@@ -32,6 +32,10 @@ type TagFilterType struct {
 	Parents *HierarchicalMultiCriterionInput `json:"parents"`
 	// Filter by child tags
 	Children *HierarchicalMultiCriterionInput `json:"children"`
+	// Filter by StashID
+	StashID *StringCriterionInput `json:"stash_id"`
+	// Filter by StashID Endpoint
+	StashIDEndpoint *StashIDCriterionInput `json:"stash_id_endpoint"`
 	// Filter by number of parent tags the tag has
 	ParentCount *IntCriterionInput `json:"parent_count"`
 	// Filter by number f child tags the tag has
@@ -48,4 +52,31 @@ type TagFilterType struct {
 	CreatedAt *TimestampCriterionInput `json:"created_at"`
 	// Filter by updated at
 	UpdatedAt *TimestampCriterionInput `json:"updated_at"`
+}
+
+type TagCreateInput struct {
+	Name          string   `json:"name"`
+	Description   *string  `json:"description"`
+	Aliases       []string `json:"aliases"`
+	IgnoreAutoTag *bool    `json:"ignore_auto_tag"`
+	Favorite      *bool    `json:"favorite"`
+	// This should be a URL or a base64 encoded data URL
+	Image     *string   `json:"image"`
+	StashIds  []StashID `json:"stash_ids"`
+	ParentIds []string  `json:"parent_ids"`
+	ChildIds  []string  `json:"child_ids"`
+}
+
+type TagUpdateInput struct {
+	ID            string   `json:"id"`
+	Name          *string  `json:"name"`
+	Description   *string  `json:"description"`
+	Aliases       []string `json:"aliases"`
+	IgnoreAutoTag *bool    `json:"ignore_auto_tag"`
+	Favorite      *bool    `json:"favorite"`
+	// This should be a URL or a base64 encoded data URL
+	Image     *string   `json:"image"`
+	StashIds  []StashID `json:"stash_ids"`
+	ParentIds []string  `json:"parent_ids"`
+	ChildIds  []string  `json:"child_ids"`
 }

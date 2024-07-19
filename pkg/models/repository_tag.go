@@ -86,6 +86,7 @@ type TagReader interface {
 	TagCounter
 
 	AliasLoader
+	StashIDLoader
 	TagRelationLoader
 
 	All(ctx context.Context) ([]*Tag, error)

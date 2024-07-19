@@ -171,3 +171,15 @@ func (r *tagResolver) ChildCount(ctx context.Context, obj *models.Tag) (ret int,
 
 	return ret, nil
 }
+
+func (r *tagResolver) StashIds(ctx context.Context, obj *models.Tag) ([]*models.StashID, error) {
+	if !obj.StashIDs.Loaded() {
+		if err := r.withReadTxn(ctx, func(ctx context.Context) error {
+			return obj.LoadStashIDs(ctx, r.repository.Tag)
+		}); err != nil {
+			return nil, err
+		}
+	}
+
+	return stashIDsSliceToPtrSlice(obj.StashIDs.List()), nil
+}

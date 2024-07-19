@@ -18,6 +18,7 @@ type Tag {
   movie_count(depth: Int): Int! @deprecated(reason: "use group_count instead") # Resolver
   parents: [Tag!]!
   children: [Tag!]!
+  stash_ids: [StashID!]!
 
   parent_count: Int! # Resolver
   child_count: Int! # Resolver
@@ -31,6 +32,7 @@ input TagCreateInput {
   favorite: Boolean
   "This should be a URL or a base64 encoded data URL"
   image: String
+  stash_ids: [StashIDInput!]
 
   parent_ids: [ID!]
   child_ids: [ID!]
@@ -45,6 +47,7 @@ input TagUpdateInput {
   favorite: Boolean
   "This should be a URL or a base64 encoded data URL"
   image: String
+  stash_ids: [StashIDInput!]
 
   parent_ids: [ID!]
   child_ids: [ID!]
