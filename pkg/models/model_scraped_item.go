@@ -385,8 +385,9 @@ func (p *ScrapedPerformer) ToPartial(endpoint string, excluded map[string]bool, 
 
 type ScrapedTag struct {
 	// Set if tag matched
-	StoredID *string `json:"stored_id"`
-	Name     string  `json:"name"`
+	StoredID     *string `json:"stored_id"`
+	Name         string  `json:"name"`
+	RemoteSiteID *string `json:"remote_site_id"`
 }
 
 func (ScrapedTag) IsScrapedContent() {}
