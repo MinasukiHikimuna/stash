@@ -202,6 +202,12 @@ func (qb *TagStore) Create(ctx context.Context, newObject *models.Tag) error {
 		}
 	}
 
+	if newObject.StashIDs.Loaded() {
+		if err := tagsStashIDsTableMgr.insertJoins(ctx, id, newObject.StashIDs.List()); err != nil {
+			return err
+		}
+	}
+
 	updated, err := qb.find(ctx, id)
 	if err != nil {
 		return fmt.Errorf("finding after create: %w", err)
@@ -245,6 +251,12 @@ func (qb *TagStore) UpdatePartial(ctx context.Context, id int, partial models.Ta
 		}
 	}
 
+	if partial.StashIDs != nil {
+		if err := tagsStashIDsTableMgr.modifyJoins(ctx, id, partial.StashIDs.StashIDs, partial.StashIDs.Mode); err != nil {
+			return nil, err
+		}
+	}
+
 	return qb.find(ctx, id)
 }
 
@@ -270,6 +282,12 @@ func (qb *TagStore) Update(ctx context.Context, updatedObject *models.Tag) error
 
 	if updatedObject.ChildIDs.Loaded() {
 		if err := tagsChildTagsTableMgr.replaceJoins(ctx, updatedObject.ID, updatedObject.ChildIDs.List()); err != nil {
+			return err
+		}
+	}
+
+	if updatedObject.StashIDs.Loaded() {
+		if err := tagsStashIDsTableMgr.replaceJoins(ctx, updatedObject.ID, updatedObject.StashIDs.List()); err != nil {
 			return err
 		}
 	}
