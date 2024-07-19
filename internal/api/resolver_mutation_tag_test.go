@@ -83,13 +83,13 @@ func TestTagCreate(t *testing.T) {
 		return
 	}
 
-	_, err := r.Mutation().TagCreate(testCtx, TagCreateInput{
+	_, err := r.Mutation().TagCreate(testCtx, models.TagCreateInput{
 		Name: existingTagName,
 	})
 
 	assert.NotNil(t, err)
 
-	_, err = r.Mutation().TagCreate(testCtx, TagCreateInput{
+	_, err = r.Mutation().TagCreate(testCtx, models.TagCreateInput{
 		Name: errTagName,
 	})
 
@@ -111,7 +111,7 @@ func TestTagCreate(t *testing.T) {
 	}).Return(nil)
 	db.Tag.On("Find", mock.Anything, newTagID).Return(newTag, nil)
 
-	tag, err := r.Mutation().TagCreate(testCtx, TagCreateInput{
+	tag, err := r.Mutation().TagCreate(testCtx, models.TagCreateInput{
 		Name: tagName,
 	})
 
