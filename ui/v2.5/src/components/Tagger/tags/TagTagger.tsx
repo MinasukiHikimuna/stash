@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { FormattedMessage, useIntl } from "react-intl";
 import { HashLink } from "react-router-hash-link";
+import { Link } from "react-router-dom";
 import { useLocalForage } from "src/hooks/LocalForage";
 
 import * as GQL from "src/core/generated-graphql";
@@ -12,6 +13,8 @@ import TagConfig from "./Config";
 import { LOCAL_FORAGE_KEY, ITaggerConfig, initialConfig } from "../constants";
 import { StashIDPill } from "src/components/Shared/StashID";
 
+const CLASSNAME = "TagTagger";
+
 interface ITagTaggerListProps {
   tags: GQL.TagDataFragment[];
   selectedEndpoint: { endpoint: string; index: number };
@@ -21,26 +24,37 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
   tags,
   selectedEndpoint,
 }) => {
-  return (
-    <>
-      {tags.map((tag) => (
-        <div key={tag.id}>
-          {tag.name}{" "}
-          {tag.stash_ids
-            .filter(
-              (stash_id) => stash_id.endpoint === selectedEndpoint?.endpoint
-            )
-            .map((stash_id) => (
-              <StashIDPill
-                key={stash_id.stash_id}
-                stashID={stash_id}
-                linkType="tags"
-              />
-            ))}
+  const renderTags = () =>
+    tags.map((tag) => {
+      return (
+        <div key={tag.id} className={`${CLASSNAME}-tag`}>
+          <div></div>
+          <div>
+            <Card className="tag-card">
+              <img loading="lazy" src={tag.image_path ?? ""} alt="" />
+            </Card>
+          </div>
+          <div className={`${CLASSNAME}-details-text`}>
+            <Link to={`/tags/${tag.id}`} className={`${CLASSNAME}-header`}>
+              <h2>{tag.name}</h2>
+            </Link>
+            {tag.stash_ids
+              .filter(
+                (stash_id) => stash_id.endpoint === selectedEndpoint?.endpoint
+              )
+              .map((stash_id) => (
+                <StashIDPill
+                  key={stash_id.stash_id}
+                  stashID={stash_id}
+                  linkType="tags"
+                />
+              ))}
+          </div>
         </div>
-      ))}
-    </>
-  );
+      );
+    });
+
+  return <Card>{renderTags()}</Card>;
 };
 
 interface ITaggerProps {
