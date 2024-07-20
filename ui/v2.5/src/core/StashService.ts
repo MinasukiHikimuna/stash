@@ -1821,7 +1821,7 @@ const tagMutationImpactedTypeFields = {
   Tag: ["parents", "children"],
 };
 
-const tagMutationImpactedQueries = [
+export const tagMutationImpactedQueries = [
   GQL.FindScenesDocument, // filter by tags
   GQL.FindImagesDocument, // filter by tags
   GQL.FindGalleriesDocument, // filter by tags
