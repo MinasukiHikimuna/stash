@@ -23,6 +23,7 @@ import { DeleteEntityDialog } from "../Shared/DeleteEntityDialog";
 import { ExportDialog } from "../Shared/ExportDialog";
 import { tagRelationHook } from "../../core/tags";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { TagTagger } from "../Tagger/tags/TagTagger";
 import { TagCardGrid } from "./TagCardGrid";
 import { EditTagsDialog } from "./EditTagsDialog";
 import { View } from "../List/views";
@@ -313,6 +314,9 @@ export const TagList: React.FC<ITagList> = ({ filterHook, alterQuery }) => {
       }
       if (filter.displayMode === DisplayMode.Wall) {
         return <h1>TODO</h1>;
+      }
+      if (filter.displayMode === DisplayMode.Tagger) {
+        return <TagTagger tags={result.data.findTags.tags} />;
       }
     }
     return (
