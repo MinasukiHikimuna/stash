@@ -524,6 +524,9 @@ input TagFilterType {
   "Filter by tag aliases"
   aliases: StringCriterionInput
 
+  "Filter by StashID"
+  stash_id_endpoint: StashIDCriterionInput
+
   "Filter by favorite"
   favorite: Boolean
 
