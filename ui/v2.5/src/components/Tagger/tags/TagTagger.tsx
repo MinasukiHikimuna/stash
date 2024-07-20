@@ -24,8 +24,40 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
   tags,
   selectedEndpoint,
 }) => {
+  const [taggedTags, setTaggedTags] = useState<
+    Record<string, Partial<GQL.SlimTagDataFragment>>
+  >({});
+
+  /*
+  const handleTaggedTag = (
+    tag: Pick<GQL.SlimTagDataFragment, "id"> &
+      Partial<Omit<GQL.SlimTagDataFragment, "id">>
+  ) => {
+    setTaggedTags({
+      ...taggedTags,
+      [tag.id]: tag,
+    });
+  };
+  */
+
   const renderTags = () =>
     tags.map((tag) => {
+      const isTagged = taggedTags[tag.id];
+      const stashID = tag.stash_ids.find((s) => {
+        return s.endpoint === selectedEndpoint.endpoint;
+      });
+
+      let mainContent;
+      if (!isTagged && stashID !== undefined) {
+        mainContent = (
+          <div className="text-left">
+            <h5 className="text-bold">
+              <FormattedMessage id="tag_tagger.tag_already_tagged" />
+            </h5>
+          </div>
+        );
+      }
+
       return (
         <div key={tag.id} className={`${CLASSNAME}-tag`}>
           <div></div>
@@ -38,6 +70,7 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
             <Link to={`/tags/${tag.id}`} className={`${CLASSNAME}-header`}>
               <h2>{tag.name}</h2>
             </Link>
+            {mainContent}
             {tag.stash_ids
               .filter(
                 (stash_id) => stash_id.endpoint === selectedEndpoint?.endpoint

@@ -1431,6 +1431,7 @@
   "tag_parent_tooltip": "Has parent tags",
   "tag_sub_tag_tooltip": "Has sub-tags",
   "tag_tagger": {
+    "tag_already_tagged": "Tag already tagged",
     "to_use_the_tag_tagger": "To use the tag tagger a stash-box instance needs to be configured."
   },
   "tags": "Tags",
