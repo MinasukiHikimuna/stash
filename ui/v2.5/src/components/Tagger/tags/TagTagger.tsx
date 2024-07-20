@@ -12,6 +12,37 @@ import TagConfig from "./Config";
 import { LOCAL_FORAGE_KEY, ITaggerConfig, initialConfig } from "../constants";
 import { StashIDPill } from "src/components/Shared/StashID";
 
+interface ITagTaggerListProps {
+  tags: GQL.TagDataFragment[];
+  selectedEndpoint: { endpoint: string; index: number };
+}
+
+export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
+  tags,
+  selectedEndpoint,
+}) => {
+  return (
+    <>
+      {tags.map((tag) => (
+        <div key={tag.id}>
+          {tag.name}{" "}
+          {tag.stash_ids
+            .filter(
+              (stash_id) => stash_id.endpoint === selectedEndpoint?.endpoint
+            )
+            .map((stash_id) => (
+              <StashIDPill
+                key={stash_id.stash_id}
+                stashID={stash_id}
+                linkType="tags"
+              />
+            ))}
+        </div>
+      ))}
+    </>
+  );
+};
+
 interface ITaggerProps {
   tags: GQL.TagDataFragment[];
 }
@@ -45,28 +76,22 @@ export const TagTagger: React.FC<ITaggerProps> = ({ tags }) => {
   return (
     <div className="tagger-container mx-md-auto">
       {selectedEndpointIndex !== -1 && selectedEndpoint ? (
-        <div>
-          <Button onClick={() => setShowConfig(!showConfig)} variant="link">
-            {intl.formatMessage({ id: showHideConfigId })}
-          </Button>
+        <>
+          <div className="row mb-2 no-gutters">
+            <Button onClick={() => setShowConfig(!showConfig)} variant="link">
+              {intl.formatMessage({ id: showHideConfigId })}
+            </Button>
+          </div>
+
           <TagConfig config={config} setConfig={setConfig} show={showConfig} />
-          {tags.map((tag) => (
-            <div key={tag.id}>
-              {tag.name}{" "}
-              {tag.stash_ids
-                .filter(
-                  (stash_id) => stash_id.endpoint === selectedEndpoint?.endpoint
-                )
-                .map((stash_id) => (
-                  <StashIDPill
-                    key={stash_id.stash_id}
-                    stashID={stash_id}
-                    linkType="tags"
-                  />
-                ))}
-            </div>
-          ))}
-        </div>
+          <TagTaggerList
+            tags={tags}
+            selectedEndpoint={{
+              endpoint: selectedEndpoint.endpoint,
+              index: selectedEndpointIndex,
+            }}
+          />
+        </>
       ) : (
         <div className="my-4">
           <h3 className="text-center mt-4">
