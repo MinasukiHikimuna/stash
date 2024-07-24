@@ -12,6 +12,7 @@ import { ConfigurationContext } from "src/hooks/Config";
 import TagConfig from "./Config";
 import { LOCAL_FORAGE_KEY, ITaggerConfig, initialConfig } from "../constants";
 import { StashIDPill } from "src/components/Shared/StashID";
+import { stashBoxTagQuery } from "src/core/StashService";
 
 const CLASSNAME = "TagTagger";
 
@@ -24,11 +25,46 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
   tags,
   selectedEndpoint,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [taggedTags, setTaggedTags] = useState<
     Record<string, Partial<GQL.SlimTagDataFragment>>
   >({});
 
-  /*
+  const doBoxSearch = (tagID: string, searchVal: string) => {
+    stashBoxTagQuery(searchVal, selectedEndpoint.endpoint)
+      .then((queryData) => {
+        const s = queryData.data?.names ?? [];
+        console.log(s);
+        /*
+        setSearchResults({
+          ...searchResults,
+          [studioID]: s,
+        });
+        setSearchErrors({
+          ...searchErrors,
+          [studioID]: undefined,
+        });
+        */
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        // Destructure to remove existing result
+        /*
+        const { [studioID]: unassign, ...results } = searchResults;
+        setSearchResults(results);
+        setSearchErrors({
+          ...searchErrors,
+          [studioID]: intl.formatMessage({
+            id: "studio_tagger.network_error",
+          }),
+        });
+        */
+      });
+
+    setLoading(true);
+  };
+
   const handleTaggedTag = (
     tag: Pick<GQL.SlimTagDataFragment, "id"> &
       Partial<Omit<GQL.SlimTagDataFragment, "id">>
@@ -38,7 +74,6 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
       [tag.id]: tag,
     });
   };
-  */
 
   const renderTags = () =>
     tags.map((tag) => {
@@ -70,6 +105,7 @@ export const TagTaggerList: React.FC<ITagTaggerListProps> = ({
             <Link to={`/tags/${tag.id}`} className={`${CLASSNAME}-header`}>
               <h2>{tag.name}</h2>
             </Link>
+            <Button onClick={() => doBoxSearch("1", "Blowjob")}>Foobar</Button>
             {mainContent}
             {tag.stash_ids
               .filter(

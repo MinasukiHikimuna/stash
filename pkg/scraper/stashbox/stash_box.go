@@ -128,6 +128,29 @@ func (c Client) QueryStashBoxScene(ctx context.Context, queryStr string) ([]*scr
 	return ret, nil
 }
 
+// QueryStashBoxTag queries stash-box for tags using a query string.
+func (c Client) QueryStashBoxTag(ctx context.Context, queryStr string) ([]*models.ScrapedTag, error) {
+	tagQueryInput := graphql.TagQueryInput{
+		Names: &queryStr,
+	}
+	tags, err := c.client.QueryTags(ctx, tagQueryInput)
+	if err != nil {
+		return nil, err
+	}
+
+	tagFragments := tags.QueryTags.Tags
+
+	var ret []*models.ScrapedTag
+	for _, t := range tagFragments {
+		tag := &models.ScrapedTag{
+			Name: t.Name,
+		}
+		ret = append(ret, tag)
+	}
+
+	return ret, nil
+}
+
 // FindStashBoxScenesByFingerprints queries stash-box for a scene using the
 // scene's MD5/OSHASH checksum, or PHash.
 func (c Client) FindStashBoxSceneByFingerprints(ctx context.Context, sceneID int) ([]*scraper.ScrapedScene, error) {
@@ -834,6 +857,23 @@ func (c Client) sceneFragmentToScrapedScene(ctx context.Context, s *graphql.Scen
 	}
 
 	return ss, nil
+}
+
+func (c Client) tagFragmentToScrapedTag(ctx context.Context, s *graphql.TagFragment) (*models.ScrapedTag, error) {
+	tag := &models.ScrapedTag{
+		Name:         s.Name,
+		RemoteSiteID: &s.ID,
+	}
+
+	r := c.repository
+	if err := r.WithReadTxn(ctx, func(ctx context.Context) error {
+		err := match.ScrapedTag(ctx, r.Tag, tag)
+		return err
+	}); err != nil {
+		return nil, err
+	}
+
+	return tag, nil
 }
 
 func (c Client) FindStashBoxPerformerByID(ctx context.Context, id string) (*models.ScrapedPerformer, error) {

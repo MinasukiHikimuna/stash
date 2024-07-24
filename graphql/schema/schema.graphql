@@ -173,6 +173,12 @@ type Query {
     input: ScrapeSingleGroupInput!
   ): [ScrapedGroup!]!
 
+  "Scrape for a single tag"
+  scrapeSingleTag(
+    source: ScraperSourceInput!
+    input: ScrapeSingleTagInput!
+  ): [ScrapedTag!]!
+
   "Scrapes content based on a URL"
   scrapeURL(url: String!, ty: ScrapeContentType!): ScrapedContent
 

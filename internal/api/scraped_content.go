@@ -99,6 +99,29 @@ func marshalScrapedMovies(content []scraper.ScrapedContent) ([]*models.ScrapedMo
 	return ret, nil
 }
 
+// marshalScrapedTags converts ScrapedContent into ScrapedTag. If conversion
+// fails, an error is returned.
+func marshalScrapedTags(content []scraper.ScrapedContent) ([]*models.ScrapedTag, error) {
+	var ret []*models.ScrapedTag
+	for _, c := range content {
+		if c == nil {
+			// graphql schema requires tags to be non-nil
+			continue
+		}
+
+		switch t := c.(type) {
+		case *models.ScrapedTag:
+			ret = append(ret, t)
+		case models.ScrapedTag:
+			ret = append(ret, &t)
+		default:
+			return nil, fmt.Errorf("%w: cannot turn ScrapedContent into ScrapedTag", models.ErrConversion)
+		}
+	}
+
+	return ret, nil
+}
+
 // marshalScrapedPerformer will marshal a single performer
 func marshalScrapedPerformer(content scraper.ScrapedContent) (*models.ScrapedPerformer, error) {
 	p, err := marshalScrapedPerformers([]scraper.ScrapedContent{content})
@@ -137,4 +160,13 @@ func marshalScrapedMovie(content scraper.ScrapedContent) (*models.ScrapedMovie, 
 	}
 
 	return m[0], nil
+}
+
+func marshalScrapedTag(content scraper.ScrapedContent) (*models.ScrapedTag, error) {
+	t, err := marshalScrapedTags([]scraper.ScrapedContent{content})
+	if err != nil {
+		return nil, err
+	}
+
+	return t[0], nil
 }

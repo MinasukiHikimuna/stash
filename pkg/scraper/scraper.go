@@ -34,6 +34,7 @@ const (
 	ScrapeContentTypeGroup     ScrapeContentType = "GROUP"
 	ScrapeContentTypePerformer ScrapeContentType = "PERFORMER"
 	ScrapeContentTypeScene     ScrapeContentType = "SCENE"
+	ScrapeContentTypeTag       ScrapeContentType = "TAG"
 )
 
 var AllScrapeContentType = []ScrapeContentType{
@@ -42,11 +43,12 @@ var AllScrapeContentType = []ScrapeContentType{
 	ScrapeContentTypeGroup,
 	ScrapeContentTypePerformer,
 	ScrapeContentTypeScene,
+	ScrapeContentTypeTag,
 }
 
 func (e ScrapeContentType) IsValid() bool {
 	switch e {
-	case ScrapeContentTypeGallery, ScrapeContentTypeMovie, ScrapeContentTypeGroup, ScrapeContentTypePerformer, ScrapeContentTypeScene:
+	case ScrapeContentTypeGallery, ScrapeContentTypeMovie, ScrapeContentTypeGroup, ScrapeContentTypePerformer, ScrapeContentTypeScene, ScrapeContentTypeTag:
 		return true
 	}
 	return false

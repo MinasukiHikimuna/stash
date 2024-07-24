@@ -66,6 +66,12 @@ type ScrapedTag {
   remote_site_id: String
 }
 
+input ScrapedTagInput {
+  name: String!
+
+  remote_site_id: String
+}
+
 type ScrapedScene {
   title: String
   code: String
@@ -208,6 +214,11 @@ input ScrapeSingleGroupInput {
   group_id: ID
   "Instructs to query by group fragment"
   group_input: ScrapedGroupInput
+}
+
+input ScrapeSingleTagInput {
+  "Instructs to query by names"
+  names: String
 }
 
 input StashBoxSceneQueryInput {

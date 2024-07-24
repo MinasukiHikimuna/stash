@@ -498,3 +498,48 @@ func (r *queryResolver) ScrapeSingleMovie(ctx context.Context, source scraper.So
 func (r *queryResolver) ScrapeSingleGroup(ctx context.Context, source scraper.Source, input ScrapeSingleGroupInput) ([]*models.ScrapedGroup, error) {
 	return nil, ErrNotSupported
 }
+
+func (r *queryResolver) ScrapeSingleTag(ctx context.Context, source scraper.Source, input ScrapeSingleTagInput) ([]*models.ScrapedTag, error) {
+	var ret []*models.ScrapedTag
+
+	if source.StashBoxIndex != nil || source.StashBoxEndpoint != nil {
+		return nil, ErrNotSupported
+	}
+
+	if source.ScraperID == nil {
+		return nil, fmt.Errorf("%w: scraper_id must be set", ErrInput)
+	}
+
+	// var c scraper.ScrapedContent
+
+	switch {
+	/*case input.TagID != nil:
+	tagID, err := strconv.Atoi(*input.TagID)
+	if err != nil {
+		return nil, fmt.Errorf("%w: tag id is not an integer: '%s'", ErrInput, *input.TagID)
+	}
+	c, err = r.scraperCache().ScrapeID(ctx, *source.ScraperID, tagID, scraper.ScrapeContentTypeTag)
+	if err != nil {
+		return nil, err
+	}
+	ret, err = marshalScrapedTags([]scraper.ScrapedContent{c})
+	if err != nil {
+		return nil, err
+	}*/
+	case input.Names != nil:
+		b, err := resolveStashBox(source.StashBoxIndex, source.StashBoxEndpoint)
+		if err != nil {
+			return nil, err
+		}
+
+		client := r.newStashBoxClient(*b)
+		ret, err = client.QueryStashBoxTag(ctx, *input.Names)
+		if err != nil {
+			return nil, err
+		}
+	default:
+		return nil, ErrNotImplemented
+	}
+
+	return ret, nil
+}
