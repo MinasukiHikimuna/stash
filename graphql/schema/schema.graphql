@@ -144,6 +144,8 @@ type Query {
     input: ScrapeSingleStudioInput!
   ): [ScrapedStudio!]!
 
+  scrapeHelloWorld(name: String!): String!
+
   "Scrape for a single performer"
   scrapeSinglePerformer(
     source: ScraperSourceInput!

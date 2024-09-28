@@ -2149,6 +2149,19 @@ export const stashBoxTagQuery = (
   query: string | null,
   stashBoxEndpoint: string
 ) =>
+  client.query<GQL.ScrapeHell, GQL.ScrapeSingleTagQueryVariables>({
+    query: GQL.ScrapeHelloWorldDocument,
+    variables: {
+      source: {
+        stash_box_endpoint: stashBoxEndpoint,
+      },
+      input: {
+        names: query,
+      },
+    },
+    fetchPolicy: "network-only",
+  });
+/*
   client.query<GQL.ScrapeSingleTagInput, GQL.ScrapeSingleTagQueryVariables>({
     query: GQL.ScrapeSingleTagDocument,
     variables: {
@@ -2161,6 +2174,7 @@ export const stashBoxTagQuery = (
     },
     fetchPolicy: "network-only",
   });
+  */
 
 export const mutateStashBoxBatchPerformerTag = (
   input: GQL.StashBoxBatchTagInput

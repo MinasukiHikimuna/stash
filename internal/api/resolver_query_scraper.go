@@ -368,6 +368,10 @@ func (r *queryResolver) ScrapeSingleStudio(ctx context.Context, source scraper.S
 	return nil, errors.New("stash_box_index must be set")
 }
 
+func (r *queryResolver) ScrapeHelloWorld(ctx context.Context, name string) (string, error) {
+	return "Hello, " + name, nil
+}
+
 func (r *queryResolver) ScrapeSinglePerformer(ctx context.Context, source scraper.Source, input ScrapeSinglePerformerInput) ([]*models.ScrapedPerformer, error) {
 	var ret []*models.ScrapedPerformer
 	switch {
