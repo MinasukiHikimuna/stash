@@ -96,6 +96,12 @@ export const SceneDetailPanel: React.FC<ISceneDetailProps> = (props) => {
               <DirectorLink director={props.scene.director} linkType="scene" />
             </h6>
           )}
+          <h6>
+            <FormattedMessage id="trailer" />:{" "}
+            <a href={props.scene.paths.trailer ?? undefined} target="_blank">
+              {props.scene.paths.trailer ?? ""}
+            </a>
+          </h6>
         </div>
       </div>
       <div className="row">

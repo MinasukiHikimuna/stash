@@ -78,6 +78,7 @@ func (rs sceneRoutes) Routes() chi.Router {
 		r.Get("/interactive_csv", rs.InteractiveCSV)
 		r.Get("/interactive_heatmap", rs.InteractiveHeatmap)
 		r.Get("/caption", rs.CaptionLang)
+		r.Get("/trailer", rs.Trailer)
 
 		r.Get("/scene_marker/{sceneMarkerId}/stream", rs.SceneMarkerStream)
 		r.Get("/scene_marker/{sceneMarkerId}/preview", rs.SceneMarkerPreview)
@@ -394,6 +395,14 @@ func (rs sceneRoutes) InteractiveHeatmap(w http.ResponseWriter, r *http.Request)
 	scene := r.Context().Value(sceneKey).(*models.Scene)
 	sceneHash := scene.GetHash(config.GetInstance().GetVideoFileNamingAlgorithm())
 	filepath := manager.GetInstance().Paths.Scene.GetInteractiveHeatmapPath(sceneHash)
+
+	utils.ServeStaticFile(w, r, filepath)
+}
+
+func (rs sceneRoutes) Trailer(w http.ResponseWriter, r *http.Request) {
+	scene := r.Context().Value(sceneKey).(*models.Scene)
+	sceneHash := scene.GetHash(config.GetInstance().GetVideoFileNamingAlgorithm())
+	filepath := manager.GetInstance().Paths.Scene.GetTrailerPath(sceneHash)
 
 	utils.ServeStaticFile(w, r, filepath)
 }

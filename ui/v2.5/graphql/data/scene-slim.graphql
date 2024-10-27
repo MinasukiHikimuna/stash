@@ -29,6 +29,7 @@ fragment SlimSceneData on Scene {
     funscript
     interactive_heatmap
     caption
+    trailer
   }
 
   scene_markers {

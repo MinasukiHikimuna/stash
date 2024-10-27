@@ -117,6 +117,7 @@ func (r *sceneResolver) Paths(ctx context.Context, obj *models.Scene) (*ScenePat
 	funscriptPath := builder.GetFunscriptURL()
 	captionBasePath := builder.GetCaptionURL()
 	interactiveHeatmap := builder.GetInteractiveHeatmapURL()
+	trailerPath := builder.GetTrailerURL()
 
 	return &ScenePathsType{
 		Screenshot:         &screenshotPath,
@@ -128,6 +129,7 @@ func (r *sceneResolver) Paths(ctx context.Context, obj *models.Scene) (*ScenePat
 		Funscript:          &funscriptPath,
 		InteractiveHeatmap: &interactiveHeatmap,
 		Caption:            &captionBasePath,
+		Trailer:            &trailerPath,
 	}, nil
 }
 
